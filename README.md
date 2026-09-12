@@ -4,8 +4,9 @@
 inversion, temporal attention and consistent editing across video frames.
 Uses your existing ComfyUI model, text-encoder and VAE loaders. No Diffusers.
 
-**v0.1.0 · Experimental** — numerical and CPU integration tests pass. Editing
-quality and GPU memory usage with actual Klein 9B weights are not validated yet.
+**v0.1.0 · Experimental** — numerical and CPU integration tests pass. A short
+video edit with actual Klein 9B weights completed successfully on an NVIDIA B200.
+Long-video quality and minimum VRAM requirements still need validation.
 
 [Example workflow](examples/editvid_native.json)
 
@@ -112,19 +113,18 @@ uses one, so four steps do not mean only four model evaluations.
 - No automatic OOM retry. Reduce resolution or chunk size and rerun.
 - No validated minimum VRAM requirement or claimed upstream visual parity yet.
 
-## Tests
+## Validation
 
-Numerical tests and native ComfyUI integration tests use small random models.
-They cover inversion, attention, chunk state, cancellation and sampler reuse.
+Development checks passed: eight numerical tests and native ComfyUI integration
+tests with small random models covering inversion, attention, chunk state,
+cancellation and sampler reuse. These development test scripts are not included
+in this repository. CPU integration reference:
+`7193f5627f036701e5efc23beaea20fa37ceaadd`.
 
-```bash
-python -m unittest discover -s tests -v
-# In an environment with ComfyUI dependencies:
-python tests/native_smoke.py /path/to/ComfyUI
-python tests/sampler_smoke.py /path/to/ComfyUI
-```
-
-ComfyUI reference: `7193f5627f036701e5efc23beaea20fa37ceaadd`.
+An end-to-end GPU test also completed with Klein 9B distilled on an NVIDIA B200
+using ComfyUI 0.32.0: 8 frames, 512 × 512, 4 steps and chunk size 4. The requested
+edit changed fire to blue and produced a WEBM video. This short test does not
+establish long-video consistency or performance on consumer GPUs.
 
 ## Troubleshooting
 

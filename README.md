@@ -100,46 +100,6 @@ latent; the seed does not add fresh random noise. Changing chunk size can change
 the result. Each inversion step uses two model evaluations; each editing step
 uses one, so four steps do not mean only four model evaluations.
 
-## Compatibility and limitations
-
-- Recent ComfyUI with Klein support and Flux attention/block patch hooks.
-- Plain source/edit prompts and a constant frame resolution.
-- No external subject-reference image, regional prompting, ControlNet or noise masks.
-- CPU caches preserve temporal state between chunks. Input/output frames and
-  inversion trajectories also use system RAM; this is not a streaming video decoder.
-- No automatic OOM retry. Reduce resolution or chunk size and rerun.
-- No validated minimum VRAM requirement or claimed upstream visual parity yet.
-
-## Validation
-
-Development checks passed: eight numerical tests and native ComfyUI integration
-tests with small random models covering inversion, attention, chunk state,
-cancellation and sampler reuse. These development test scripts are not included
-in this repository. CPU integration reference:
-`7193f5627f036701e5efc23beaea20fa37ceaadd`.
-
-An end-to-end GPU test also completed with Klein 9B distilled on an NVIDIA B200
-using ComfyUI 0.32.0: 8 frames, 512 × 512, 4 steps and chunk size 4. The requested
-edit changed fire to blue and produced a WEBM video. This short test does not
-establish long-video consistency or performance on consumer GPUs.
-
-## Troubleshooting
-
-| Problem | What to check |
-|---|---|
-| Node missing or `IMPORT FAILED` | Confirm the folder layout, restart ComfyUI and inspect its startup log. Update ComfyUI if Flux patch hooks are missing. |
-| Model filename rejected | Choose installed files in the loaders; example names are placeholders. |
-| “Klein 9B distilled only” | Use the supported 9B architecture and correct distilled checkpoint. |
-| Expected 128 latent channels | Use the matching Klein/Flux2 VAE. |
-| Sigma schedule error | Connect a full Flux2Scheduler output, from 1 to 0. |
-| Out of memory | Lower chunk size to 2 or 1 and/or lower the frame resolution. |
-| Poor edit or flicker | Check the source description, edit instruction and model variant. Quality is still experimental. |
-| Video has no audio | The example Save WEBM node writes frames only; use an audio-capable output workflow. |
-
-When reporting an issue, include the error log, ComfyUI version, GPU/VRAM, model
-filenames, resolution, frame count, chunk size and a workflow with private prompts
-or file paths removed as needed.
-
 ## Credits and license
 
 Based on [PLAN-Lab/EditVid](https://github.com/PLAN-Lab/EditVid),

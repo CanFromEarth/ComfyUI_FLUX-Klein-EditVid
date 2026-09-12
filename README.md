@@ -4,9 +4,6 @@
 inversion, temporal attention and consistent editing across video frames.
 Uses your existing ComfyUI model, text-encoder and VAE loaders. No Diffusers.
 
-**v0.1.0 · Experimental** — numerical and CPU integration tests pass. A short
-video edit with actual Klein 9B weights completed successfully on an NVIDIA B200.
-Long-video quality and minimum VRAM requirements still need validation.
 
 [Example workflow](examples/editvid_native.json)
 
